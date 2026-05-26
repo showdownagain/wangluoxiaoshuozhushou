@@ -1,15 +1,29 @@
 ---
 name: 网络小说助手
 description: v0.0.2｜长篇网络小说创作全流程助手：设定→大纲→角色卡系统→地图索引→写作→三批次修订→审校。支持都市、灵异、玄幻、修仙等主流题材。新增角色卡系统和地图故事索引功能。
-allowed-tools: Read Write Edit Glob Grep Bash(wc * gci grep) Agent
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash(wc:*), Bash(ls:*), Bash(grep:*), Bash(head:*), Bash(find:*), Bash(test:*), Bash(if *), Agent
 ---
 
 ## 当前项目状态
 
 ```!
-if (Test-Path "大纲/总纲.md") { Write-Output "=== 全书大纲 ==="; Get-Content "大纲/总纲.md" -Head 20 } elseif (Test-Path "outline/master-outline.md") { Write-Output "=== 全书大纲 ==="; Get-Content "outline/master-outline.md" -Head 20 } else { Write-Output "[尚未创建大纲，请先运行 plan]"; exit }
-if (Test-Path "角色卡/index.md") { $cnt = (Get-Content "角色卡/index.md" | Select-String -Pattern "^\|" | Measure-Object).Count; Write-Output "角色卡: $cnt 张" }
-if (Test-Path "地图/index.md") { $cnt = (Get-Content "地图/index.md" | Select-String -Pattern "^\|" | Measure-Object).Count; Write-Output "地图地点: $cnt 个" }
+if [ -f "大纲/总纲.md" ]; then
+  echo "=== 全书大纲 ==="
+  head -20 "大纲/总纲.md"
+elif [ -f "outline/master-outline.md" ]; then
+  echo "=== 全书大纲 ==="
+  head -20 "outline/master-outline.md"
+else
+  echo "[尚未创建大纲，请先运行 plan]"
+fi
+if [ -f "角色卡/index.md" ]; then
+  cnt=$(grep -c "^|" "角色卡/index.md" 2>/dev/null || echo 0)
+  echo "角色卡: $cnt 张"
+fi
+if [ -f "地图/index.md" ]; then
+  cnt=$(grep -c "^|" "地图/index.md" 2>/dev/null || echo 0)
+  echo "地图地点: $cnt 个"
+fi
 ```
 
 ## 核心身份
